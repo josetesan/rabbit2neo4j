@@ -1,0 +1,11 @@
+spring:
+    neo4j:
+        authentication:
+            password: secret
+            username: neo4j
+        uri: bolt://localhost:7687
+    rabbitmq:
+        username: guest
+        password: guest
+        host: localhost
+        port: 5672
