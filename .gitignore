@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+Sera borrado .mvn/
+Sera borrado mvnw
+Sera borrado mvnw.cmd
