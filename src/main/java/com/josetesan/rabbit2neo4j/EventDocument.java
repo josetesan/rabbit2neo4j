@@ -3,12 +3,12 @@ package com.josetesan.rabbit2neo4j;
 import com.ingdirect.databus.domain.event.Event;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.neo4j.core.schema.Node;
 
 import java.util.Map;
 
-@Document
 @Data
+@Node("event")
 public class EventDocument {
 
     @Id
