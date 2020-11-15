@@ -1,9 +1,10 @@
 package com.josetesan.rabbit2neo4j;
 
+import com.ingdirect.databus.eda.event.marshaller.Marshaller;
+import com.ingdirect.databus.eda.event.marshaller.MsgPackMarshaller;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Delivery;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +17,12 @@ import reactor.rabbitmq.ReceiverOptions;
 @Configuration
 public class RabbitConsumer {
 
+    public static final String QUEUE = "testquest";
 
-    private static final String QUEUE = "";
+    @Bean
+    Marshaller marshaller() {
+        return new MsgPackMarshaller();
+    }
 
     @Bean
     Mono<Connection> connectionMono(RabbitProperties rabbitProperties) {
