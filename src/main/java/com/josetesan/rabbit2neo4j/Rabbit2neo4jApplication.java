@@ -2,12 +2,11 @@ package com.josetesan.rabbit2neo4j;
 
 import com.ingdirect.databus.eda.event.marshaller.Marshaller;
 import lombok.extern.slf4j.Slf4j;
+import org.neo4j.driver.Driver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.neo4j.repository.config.EnableReactiveNeo4jRepositories;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import reactor.core.publisher.Flux;
 import reactor.rabbitmq.OutboundMessage;
 import reactor.rabbitmq.OutboundMessageResult;
@@ -20,8 +19,6 @@ import java.util.Objects;
 
 @SpringBootApplication
 @Slf4j
-@EnableReactiveNeo4jRepositories
-@EnableTransactionManagement
 public class Rabbit2neo4jApplication implements CommandLineRunner {
 
 
@@ -33,7 +30,6 @@ public class Rabbit2neo4jApplication implements CommandLineRunner {
 
 	@Autowired
 	private ReactiveEventNeoj4Repository reactiveEventNeoj4Repository;
-
 
 	@Autowired
 	private Marshaller marshaller;
@@ -79,11 +75,13 @@ public class Rabbit2neo4jApplication implements CommandLineRunner {
 			})
 			.filter(Objects::nonNull)
 			.map(EventDocument::new)
-			.subscribe( event -> {
-				reactiveEventNeoj4Repository.save(event);
-				log.info("Evento {} insertado", event.getSource());
-			});
+			.map(reactiveEventNeoj4Repository::save)
+			.subscribe(eventDocumentMono -> log.info("Evento guardado "));
 
+
+
+		receiver.close();
+		sender.close();
 
 
 	}
